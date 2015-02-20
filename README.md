@@ -11,6 +11,8 @@ Current requirements and assumptions.
 
 - You have to have an OpenStack Third Party CI account to monitor the Gerrit Stream
 - All of this work thus far assumes running on an OpenStack Cloud
+	- Most simple setup is running this in a DevStack installation (which results in running DevStack in a DevStack VM when testing, yes)
+	- Use ubuntu images for the CI machine as well as inside your OpenStack Cloud
 - Update/Modify sos_ci/ansible/vars.yml for your OpenStack creds
 - If you want to do multi-nic (ie: seperate network for iSCSI, use multi-nic options)
 - In order to use the mail notification option, install:
