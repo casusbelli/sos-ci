@@ -15,6 +15,7 @@ Current requirements and assumptions.
 	- Use ubuntu images for the CI machine as well as inside your OpenStack Cloud
 - Update/Modify sos_ci/ansible/vars.yml for your OpenStack creds
 - If you want to do multi-nic (ie: seperate network for iSCSI, use multi-nic options)
+- Ensure /etc/ansible/hosts contains localhost and a category [log_server], where the server storing & publishing the build-logs is specified.
 - In order to use the mail notification option, install:
   * postfix
   * sendmail
