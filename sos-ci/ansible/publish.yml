@@ -1,21 +1,22 @@
-- hosts: sfci
+- hosts: logs_server
+  remote_user: {{ logs_user }}
   connection: smart
   gather_facts: false
   tasks:
   - name: Nuke it if it exists
     shell: rm -rf {{ ref_name }}*
     args:
-      chdir: ~/www/solidfire-ci-logs
+      chdir: {{ logs_dir }}
 
   - name: Create ref directory on web server
-    shell: mkdir ~/www/solidfire-ci-logs/{{ ref_name }}
+    shell: mkdir {{ logs_dir }}/{{ ref_name }}
 
   - name: Copy backup of console file
-    copy: src={{ results_dir }}/console.log.out dest=~/www/solidfire-ci-logs/{{ ref_name }}/console.log.out
+    copy: src={{ results_dir }}/console.log.out dest={{ logs_dir }}/{{ ref_name }}/console.log.out
     ignore_errors: yes
 
   - name: Copy files to web server
-    copy: src={{ results_dir }}/{{ item }} dest=~/www/solidfire-ci-logs/{{ ref_name }}
+    copy: src={{ results_dir }}/{{ item }} dest={{ logs_dir }}/{{ ref_name }}
     ignore_errors: yes
     with_items:
       - ansible.out
@@ -26,5 +27,4 @@
     shell: tar -xzf {{ ref_name }}.tar.gz
     ignore_errors: yes
     args:
-      chdir: ~/www/solidfire-ci-logs/{{ ref_name }}
-
+      chdir: "{{ logs_dir }}/{{ ref_name }}"
