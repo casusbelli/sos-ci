@@ -12,7 +12,6 @@
       - libmysqlclient-dev
       - python-dev
       - python-pip
-      - python-wheel
       - python-numpy
       - python-yaml
       - python-posix-ipc
