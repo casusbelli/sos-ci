@@ -11,6 +11,11 @@
       - python-mysqldb
       - libmysqlclient-dev
       - python-dev
+      - python-pip
+      - python-wheel
+      - python-numpy
+      - python-yaml
+      - python-posix-ipc
 
   - name: clone devstack
     sudo: no
