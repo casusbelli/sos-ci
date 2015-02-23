@@ -14,7 +14,6 @@
       - python-pip
       - python-numpy
       - python-yaml
-      - python-posix-ipc
 
   - name: clone devstack
     sudo: no
