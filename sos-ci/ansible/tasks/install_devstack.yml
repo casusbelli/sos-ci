@@ -12,8 +12,6 @@
       - libmysqlclient-dev
       - python-dev
       - python-pip
-      - python-numpy
-      - python-yaml
 
   - name: clone devstack
     sudo: no
