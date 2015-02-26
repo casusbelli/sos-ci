@@ -9,7 +9,6 @@
       - vim
       # Some libs are missing in the ubuntu cloud image and seemingly not covered by dependencies
       - python-mysqldb
-      - libmysqlclient-dev
       - python-dev
 
   - name: Unload kvm_intel module
