@@ -236,7 +236,7 @@ if __name__ == '__main__':
         JobThread().start()
 
     while True:
-        events = GerritEventStream('sfci')
+        events = GerritEventStream('quobyteci')
         for event in events:
             try:
                 event = json.loads(event)
