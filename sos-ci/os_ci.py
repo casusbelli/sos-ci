@@ -114,7 +114,8 @@ class JobThread(Thread):
             self.ssh.connect(cfg.AccountInfo.gerrit_host,
                              int(cfg.AccountInfo.gerrit_port),
                              cfg.AccountInfo.ci_account,
-                             key_filename=cfg.AccountInfo.gerrit_ssh_key)
+                             key_filename=cfg.AccountInfo.gerrit_ssh_key,
+                             timeout=180)
         except paramiko.SSHException as e:
             logger.error('%s', e)
             sys.exit(1)
