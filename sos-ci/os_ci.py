@@ -43,8 +43,13 @@ def _filter_cinder_events(event):
         if event['author']['username'] == 'jenkins':
             logger.info('Adding review id %s to job queue...' %
                         event['change']['number'])
+
+            # One log to act as a data store, and another just to look at
             with open(DATA_DIR + '/valid-event.log', 'a') as f:
                 json.dump(event, f)
+                f.write('\n')
+            with open(DATA_DIR + '/pretty-event.log', 'a') as f:
+                json.dump(event, f, indent=2)
             return event
     else:
         return None
@@ -75,28 +80,25 @@ class JobThread(Thread):
         subject = ''
         msg = ''
         logger.debug('Building gerrit review message...')
-        msg = 'Commit: %s\nLogs: %s\n' % (log_location, commit_id)
+        msg = 'Commit: %s\nLogs: %s\n' % (commit_id, log_location)
         if passed:
-            subject += " sf-dsvm SUCCESS"
+            subject += " %s SUCCESS" % cfg.AccountInfo.ci_name
             msg += "Result: SUCCESS"
-            cmd += """"* solidfire-dsvm-volume %s : SUCCESS " %s""" % \
-                   (log_location, commit_id)
+            cmd += """"* %s %s : SUCCESS " %s""" % \
+                   (cfg.AccountInfo.ci_name, log_location, commit_id)
             logger.debug("Created success cmd: %s", cmd)
         else:
             subject += " sf-dsvm FAILED"
             msg += "Result: FAILED"
-            cmd += """"* solidfire-dsvm-volume %s : FAILURE " %s""" % \
-                   (log_location, commit_id)
+            cmd += """"* %s %s : FAILURE " %s""" % \
+                   (cfg.AccountInfo.ci_name, log_location, commit_id)
             logger.debug("Created failed cmd: %s", cmd)
 
-        msg += "\nLOGS: log_location"
         logger.debug('Issue notification email, '
                      'Subject: %(subject)s, %(msg)s',
                      {'subject': subject, 'msg': msg})
 
         _send_notification_email(subject, msg)
-        with open('~/sos_ci_results.dat', 'a') as f:
-            f.write('%s\n' % cmd)
 
         logger.debug('Connecting to gerrit for voting '
                      '%(user)s@%(host)s:%(port)d '
@@ -122,11 +124,14 @@ class JobThread(Thread):
             self.ssh.exec_command(cmd)
 
     def run(self):
+        counter = 60
         while True:
+            counter -= 1
             event_queue
             if not event_queue:
-                logger.debug('queue is empty, sleep for 60 '
-                             'seconds and check again...')
+                if counter <= 1:
+                    logger.debug('Queue is empty, checking every 60 seconds...')
+                    counter = 60
                 time.sleep(60)
             else:
                 event = event_queue.popleft()
@@ -166,9 +171,9 @@ class JobThread(Thread):
 
                 logger.info("Completed %s", cfg.AccountInfo.ci_name)
                 url_name = patchset_ref.replace('/', '-')
-                log_location = ('http://54.164.167.86/solidfire-ci-logs/%s' %
-                                url_name)
+                log_location = cfg.Logs.log_dir + '/' + url_name
                 self._post_results_to_gerrit(log_location, success, commit_id)
+
                 try:
                     pipeline.remove(valid_event)
                 except ValueError:
@@ -222,13 +227,13 @@ def process_options():
     (options, args) = parser.parse_args()
     return options
 
+
 if __name__ == '__main__':
     event_queue = deque()
     options = process_options()
 
     for i in xrange(options.number_of_worker_threads):
         JobThread().start()
-    JobThread().start()
 
     while True:
         events = GerritEventStream('sfci')
@@ -241,6 +246,7 @@ if __name__ == '__main__':
                 break
             valid_event = _filter_cinder_events(event)
             if valid_event:
+                logger.debug('Identified valid event, sending to queue...')
                 if not options.event_monitor_only:
                     logger.debug("Adding event to queue:%s\n", valid_event)
                     event_queue.append(valid_event)
