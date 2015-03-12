@@ -114,8 +114,7 @@ class JobThread(Thread):
             self.ssh.connect(cfg.AccountInfo.gerrit_host,
                              int(cfg.AccountInfo.gerrit_port),
                              cfg.AccountInfo.ci_account,
-                             key_filename=cfg.AccountInfo.gerrit_ssh_key,
-                             timeout=12)
+                             key_filename=cfg.AccountInfo.gerrit_ssh_key)
         except paramiko.SSHException as e:
             logger.error('%s', e)
             sys.exit(1)
@@ -237,7 +236,7 @@ if __name__ == '__main__':
         JobThread().start()
 
     while True:
-        events = GerritEventStream('quobyteci')
+        events = GerritEventStream('sfci')
         for event in events:
             try:
                 event = json.loads(event)
