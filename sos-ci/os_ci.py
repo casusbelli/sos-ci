@@ -115,7 +115,7 @@ class JobThread(Thread):
                              int(cfg.AccountInfo.gerrit_port),
                              cfg.AccountInfo.ci_account,
                              key_filename=cfg.AccountInfo.gerrit_ssh_key,
-                             timeout=180)
+                             timeout=12)
         except paramiko.SSHException as e:
             logger.error('%s', e)
             sys.exit(1)
@@ -125,7 +125,7 @@ class JobThread(Thread):
             self.ssh.exec_command(cmd)
 
     def run(self):
-        counter = 60
+        counter = 0
         while True:
             counter -= 1
             event_queue
