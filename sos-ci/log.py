@@ -1,6 +1,7 @@
 import logging
 from logging import handlers
 
+
 def setup_logger(name):
 
     logger = logging.getLogger(name)
@@ -12,6 +13,7 @@ def setup_logger(name):
         handlers.RotatingFileHandler(name,
                                      maxBytes=1048576,
                                      backupCount=2,)
+    file_handler.setFormatter(logFormatter)
     logger.addHandler(file_handler)
 
     console_handler = logging.StreamHandler()
