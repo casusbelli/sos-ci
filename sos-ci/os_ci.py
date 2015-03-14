@@ -88,7 +88,7 @@ class JobThread(Thread):
                    (cfg.AccountInfo.ci_name, log_location, commit_id)
             logger.debug("Created success cmd: %s", cmd)
         else:
-            subject += " sf-dsvm FAILED"
+            subject += " %s FAILED" % cfg.AccountInfo.ci_name
             msg += "Result: FAILED"
             cmd += """"* %s %s : FAILURE " %s""" % \
                    (cfg.AccountInfo.ci_name, log_location, commit_id)
