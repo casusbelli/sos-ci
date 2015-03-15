@@ -8,13 +8,14 @@
       - git
       - vim
 
-  # - name: Unload kvm_intel module
-  #   shell: modprobe -r kvm_intel
-  #   sudo: yes
+  - name: Unload kvm_intel module
+    shell: modprobe -r kvm_intel
+    sudo: yes
+    ignore_errors: yes
 
-  # - name: Load kvm_intel module with nested virt option
-  #   shell: modprobe kvm_intel nested=1
-  #   sudo: yes
+  - name: Load kvm_intel module with nested virt option
+    shell: modprobe kvm_intel nested=1
+    sudo: yes
 
   - name: clone devstack
     sudo: no
