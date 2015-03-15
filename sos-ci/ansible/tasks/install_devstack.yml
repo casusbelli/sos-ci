@@ -40,4 +40,4 @@
 
   - name: Fail the stack.sh task
     fail: msg="Failed to complete stack.sh"
-    when: stack_result|failed
+    when: "'FAILED' in stack_result.stderr"
