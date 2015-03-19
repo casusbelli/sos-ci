@@ -183,10 +183,12 @@ class JobThread(Thread):
 class GerritEventStream(object):
     def __init__(self, *args, **kwargs):
 
-        logger.debug('Connecting to gerrit stream with '
+        logger.debug('Connecting to gerrit stream '
+                     ' for project %(project)s with '
                      '%(user)s@%(host)s:%(port)d '
                      'using keyfile %(key_file)s',
-                     {'user': cfg.AccountInfo.ci_account,
+                     {'project': cfg.AccountInfo.project_name,
+                      'user': cfg.AccountInfo.ci_account,
                       'host': cfg.AccountInfo.gerrit_host,
                       'port': int(cfg.AccountInfo.gerrit_port),
                       'key_file': cfg.AccountInfo.gerrit_ssh_key})
@@ -236,7 +238,7 @@ if __name__ == '__main__':
         JobThread().start()
 
     while True:
-        events = GerritEventStream('sfci')
+        events = GerritEventStream()
         for event in events:
             try:
                 event = json.loads(event)
