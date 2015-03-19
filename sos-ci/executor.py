@@ -62,7 +62,7 @@ def just_doit(patchset_ref, results_dir):
         # console.out file
         with open(console_log) as f:
             first_line = f.readline()
-        print "Attempting to parse: %s" % first_line
+        logger.debug("Attempting to parse: %s" % first_line)
         hash_id = first_line.split()[1]
 
     # Finally, delete the instance regardless of pass/fail
