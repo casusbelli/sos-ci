@@ -94,11 +94,11 @@ class JobThread(Thread):
                    (cfg.AccountInfo.ci_name, log_location, commit_id)
             logger.debug("Created failed cmd: %s", cmd)
 
-        logger.debug('Issue notification email, '
-                     'Subject: %(subject)s, %(msg)s',
-                     {'subject': subject, 'msg': msg})
+            logger.debug('Issue notification email, '
+                         'Subject: %(subject)s, %(msg)s',
+                         {'subject': subject, 'msg': msg})
 
-        _send_notification_email(subject, msg)
+            _send_notification_email(subject, msg)
 
         logger.debug('Connecting to gerrit for voting '
                      '%(user)s@%(host)s:%(port)d '
