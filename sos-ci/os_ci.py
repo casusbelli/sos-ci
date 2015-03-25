@@ -173,7 +173,13 @@ class JobThread(Thread):
 
                 ref_name = patchset_ref.replace('/', '-')
                 results_dir = DATA_DIR + '/' + ref_name
-                os.mkdir(results_dir)
+                try:
+                    os.mkdir(results_dir)
+                except OSError:
+                    if not os.path.isdir(results_dir):
+                        logger.error('Unable to create data dir for: \n%s',
+                                     event)
+                    # data dir already exists, this is a recheck
 
                 try:
                     commit_id, success, output = \
