@@ -177,8 +177,9 @@ class JobThread(Thread):
                     os.mkdir(results_dir)
                 except OSError:
                     if not os.path.isdir(results_dir):
-                        logger.error('Unable to create data dir for: \n%s',
-                                     event)
+                        logger.error('Unable to create data dir '
+                                     'at %(resdir)s for: \n%(ev)s',
+                                     {'resdir': results_dir, 'ev': event})
                     # data dir already exists, this is a recheck
 
                 try:
