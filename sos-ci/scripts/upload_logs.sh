@@ -36,6 +36,10 @@ PROJECTS="openstack/tempest $PROJECTS"
 cd ~/devstack
 cp local.conf /home/ubuntu/$REF_NAME/logs/local.conf.txt
 cp /tmp/stack.sh.log.out /home/ubuntu/$REF_NAME/logs/stack.sh.log.out.txt
+sudo cp /var/log/syslog /home/ubuntu/$REF_NAME/logs/syslog.log
+sudo chown ubuntu:ubuntu /home/ubuntu/$REF_NAME/logs/syslog.log
+chmod 777 /home/ubuntu/$REF_NAME/logs/syslog.log
+
 
 # Archive config files
 for PROJECT in $PROJECTS; do
