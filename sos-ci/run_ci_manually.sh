@@ -4,4 +4,4 @@
 # Edit to set instance name, also edit ./ansible/manual_ci.yml to adopt to your
 # installation
 
-ansible-playbook ./ansible/manual_ci.yml -e "patch_ref=master instance_name=manualCI"
+ansible-playbook ./ansible/manual_ci.yml -e "patchset_ref=master instance_name=manualCI"
