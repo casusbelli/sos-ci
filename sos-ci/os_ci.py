@@ -158,7 +158,10 @@ class JobThread(Thread):
                 time.sleep(60)
             else:
                 event = event_queue.popleft()
-                logger.debug("Processing event from queue:\n%s", event)
+                logger.debug(
+                    ("Processing event from queue ({0} waiting):\n{1}")
+                    .format(unicode(len(event_queue)),
+                            unicode(event)))
 
                 # Add a goofy pipeline queue so we know
                 # not only when nothing is in the queue
