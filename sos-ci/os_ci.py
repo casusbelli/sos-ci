@@ -112,8 +112,9 @@ class JobThread(Thread):
         else:
             subject += " %s FAILED" % cfg.AccountInfo.ci_name
             msg += "Result: FAILED"
-            cmd += """"* %s %s : FAILURE " %s""" % \
-                   (cfg.AccountInfo.ci_name, log_location, commit_id)
+            cmd += """"* %s %s : FAILURE \n\nUse '%s' to re-check." %s""" % \
+                   (cfg.AccountInfo.ci_name, log_location,
+                    cfg.AccountInfo.recheck_string, commit_id)
             logger.debug("Created failed cmd: %s", cmd)
 
             logger.debug('Issue notification email, '
@@ -288,3 +289,5 @@ if __name__ == '__main__':
                 if not options.event_monitor_only:
                     logger.debug("Adding event to queue:%s\n", valid_event)
                     event_queue.append(valid_event)
+                    logger.debug("Total current queue length: %s\n",
+                                 unicode(len(event_queue)))
