@@ -106,15 +106,19 @@ class JobThread(Thread):
         if passed:
             subject += " %s SUCCESS" % cfg.AccountInfo.ci_name
             msg += "Result: SUCCESS"
-            cmd += """"* %s %s : SUCCESS " %s""" % \
-                   (cfg.AccountInfo.ci_name, log_location, commit_id)
+            cmd += """"* %s %s : SUCCESS \n\n%s" %s""" % \
+                   (cfg.AccountInfo.ci_name, log_location,
+                    cfg.AccountInfo.ci_wiki_page, commit_id)
             logger.debug("Created success cmd: %s", cmd)
         else:
             subject += " %s FAILED" % cfg.AccountInfo.ci_name
             msg += "Result: FAILED"
-            cmd += """"* %s %s : FAILURE \n\nUse '%s' to re-check." %s""" % \
-                   (cfg.AccountInfo.ci_name, log_location,
-                    cfg.AccountInfo.recheck_string, commit_id)
+            cmd += """"* %s %s : FAILURE \n\nUse '%s' to re-check (see %s)." %s""" % \
+                   (cfg.AccountInfo.ci_name,
+                    log_location,
+                    cfg.AccountInfo.recheck_string,
+                    cfg.AccountInfo.ci_wiki_page,
+                    commit_id)
             logger.debug("Created failed cmd: %s", cmd)
 
             logger.debug('Issue notification email, '

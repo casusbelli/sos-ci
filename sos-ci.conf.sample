@@ -6,6 +6,7 @@ project_name = openstack/cinder
 ci_name = sos-changeme-dsvm-full
 ci_account = my-ci-account
 recheck_string = recheck
+ci_wiki_page = https://wiki.openstack.org/wiki/ThirdPartySystems/<YOUR_CI_PAGE_HERE>
 
 [Ansible]
 ansible_dir = /path/to/my/ansible/playbooks
