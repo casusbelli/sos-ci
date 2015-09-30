@@ -275,7 +275,14 @@ if __name__ == '__main__':
         JobThread().start()
 
     while True:
-        events = GerritEventStream()
+        events = []
+        try:
+            events = GerritEventStream()
+        except Exception as ex:
+            logger.exception('Error connecting to Gerrit: %s', ex)
+            time.sleep(60)
+            pass
+
         for event in events:
             try:
                 event = json.loads(event)
