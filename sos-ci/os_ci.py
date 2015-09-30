@@ -113,10 +113,9 @@ class JobThread(Thread):
         else:
             subject += " %s FAILED" % cfg.AccountInfo.ci_name
             msg += "Result: FAILED"
-            cmd += """"* %s %s : FAILURE \n\nUse '%s' to re-check (see %s)." %s""" % \
+            cmd += """"* %s %s : FAILURE \n\nSee %s for rechecking and info." %s""" % \
                    (cfg.AccountInfo.ci_name,
                     log_location,
-                    cfg.AccountInfo.recheck_string,
                     cfg.AccountInfo.ci_wiki_page,
                     commit_id)
             logger.debug("Created failed cmd: %s", cmd)
