@@ -153,7 +153,6 @@ class JobThread(Thread):
         counter = 0
         while True:
             counter -= 1
-            event_queue
             if not event_queue:
                 if counter <= 1:
                     logger.debug('Queue is empty, '
@@ -275,7 +274,13 @@ if __name__ == '__main__':
         JobThread().start()
 
     while True:
-        events = GerritEventStream()
+        try:
+            events = GerritEventStream()
+        except Exception as ex:
+            logger.exception('Error connecting to Gerrit: $s', ex)
+            time.sleep(60)
+            pass
+
         for event in events:
             try:
                 event = json.loads(event)
