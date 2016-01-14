@@ -277,7 +277,7 @@ if __name__ == '__main__':
         try:
             events = GerritEventStream()
         except Exception as ex:
-            logger.exception('Error connecting to Gerrit: $s', ex)
+            logger.exception('Error connecting to Gerrit: %s', ex)
             time.sleep(60)
             pass
 
