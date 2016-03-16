@@ -8,3 +8,5 @@ key_name: cloudkey
 multinic: false
 logs_dir: /var/www/html/logs/
 logs_user: logserveruser
+floatingip_pool: public
+private_network: private
