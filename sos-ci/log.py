@@ -19,4 +19,5 @@ def setup_logger(name):
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(logFormatter)
     logger.addHandler(console_handler)
+    file_handler.doRollover()
     return logger
