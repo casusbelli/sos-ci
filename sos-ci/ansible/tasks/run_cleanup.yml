@@ -3,7 +3,7 @@
 
   - name: send over upload script
     sudo: no
-    template: src=../../scripts/upload_logs.sh dest=/home/ubuntu/
+    template: src=../../scripts/upload_logs.sh dest=/home/ubuntu/ mode=755
 
   - name: run upload
     sudo: yes
