@@ -15,6 +15,7 @@ from iniparse import INIConfig
 
 import executor
 import log
+import prometheus
 
 fdir = os.path.dirname(os.path.realpath(__file__))
 conf_dir = os.path.dirname(fdir)
@@ -269,6 +270,9 @@ def process_options():
 if __name__ == '__main__':
     event_queue = deque()
     options = process_options()
+    exporter = prometheus.PrometheusExporter(
+        exp_dir=cfg.Prometheus.export_dir,
+        ci_name=cfg.AccountInfo.ci_name)
 
     for i in xrange(options.number_of_worker_threads):
         JobThread().start()
@@ -299,3 +303,5 @@ if __name__ == '__main__':
                     event_queue.append(valid_event)
                     logger.debug("Total current queue length: %s\n",
                                  unicode(len(event_queue)))
+
+            exporter.export_queue_length(len(event_queue))

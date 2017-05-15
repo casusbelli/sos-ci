@@ -8,6 +8,9 @@ ci_account = my-ci-account
 recheck_string = run sos-changeme-dsvm-full
 ci_wiki_page = https://wiki.openstack.org/wiki/ThirdPartySystems/<YOUR_CI_PAGE_HERE>
 
+[Prometheus]
+export_dir = /tmp/node_exporter_files
+
 [Ansible]
 ansible_dir = /path/to/my/ansible/playbooks
 
