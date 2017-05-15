@@ -7,6 +7,7 @@ class PrometheusExporter():
 
     _export_dir = None
     _ci_name = None
+    _metric_name = "sos_ci_queue_length"
 
     def __init__(self, exp_dir=None, ci_name="sos-ci"):
         if exp_dir:
@@ -22,16 +23,17 @@ class PrometheusExporter():
     def export_queue_length(self, length=0):
         """exports the given length for the prometheus node_exporter"""
         tmp_file = tempfile.NamedTemporaryFile(delete=False)
-        right_now = int(round(time.time()*1000,0))
+        tmp_file.write("# HELP " + self._metric_name +
+                       " The number of waiting jobs.\n")
+        tmp_file.write("# TYPE " + self._metric_name + " gauge\n")
         tmp_file.write(
-            "sos_ci_queue_length {ci_name=\"" + self._ci_name
-            + "\"} %(length)s %(time)s \n"
-            .format({"length": length, "time": str(right_now)}))
+            self._metric_name + " {ci_name=\"" + self._ci_name
+            + "\"} " + str(length) + "\n")
         tmp_file.flush()
         os.fsync(tmp_file.fileno())
         tmp_file.close()
         os.chmod(tmp_file.name, 0666)
-        print("moving export file from " + tmp_file.name + " to "
-              + os.path.join(self._export_dir, self._ci_name + ".prom"))
+        #print("moving export file from " + tmp_file.name + " to "
+        #      + os.path.join(self._export_dir, self._ci_name + ".prom"))
         os.rename(tmp_file.name,
                   os.path.join(self._export_dir, self._ci_name + ".prom"))
