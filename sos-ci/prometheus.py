@@ -7,7 +7,8 @@ class PrometheusExporter():
 
     _export_dir = None
     _ci_name = None
-    _metric_name = "sos_ci_queue_length"
+    _metric_name_suffix = "_queue_length"
+    _metric_name = None
 
     def __init__(self, exp_dir=None, ci_name="sos-ci"):
         if exp_dir:
@@ -16,6 +17,8 @@ class PrometheusExporter():
             raise OSError(2, 'No export dir provided')
 
         self._ci_name = ci_name
+        self._metric_name = self._ci_name.replace("-", "_") + "_"\
+                            + self._metric_name_suffix
         print("Initialized PrometheusExporter with ci_name: %(name)s and "
               "export directory: %(dir)s".format({"name": self._ci_name,
                                                   "dir": self._export_dir}))
@@ -26,9 +29,8 @@ class PrometheusExporter():
         tmp_file.write("# HELP " + self._metric_name +
                        " The number of waiting jobs.\n")
         tmp_file.write("# TYPE " + self._metric_name + " gauge\n")
-        tmp_file.write(
-            self._metric_name + " {ci_name=\"" + self._ci_name
-            + "\"} " + str(length) + "\n")
+        tmp_file.write(self._metric_name + " {ci_name=\""
+                       + self._ci_name + "\", } " + str(length) + "\n")
         tmp_file.flush()
         os.fsync(tmp_file.fileno())
         tmp_file.close()
