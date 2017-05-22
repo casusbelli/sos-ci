@@ -270,9 +270,11 @@ def process_options():
 if __name__ == '__main__':
     event_queue = deque()
     options = process_options()
-    exporter = prometheus.PrometheusExporter(
-        exp_dir=cfg.Prometheus.export_dir,
-        ci_name=cfg.AccountInfo.ci_name)
+    if cfg.Prometheus:
+        exporter = prometheus.PrometheusExporter(
+            exp_dir=cfg.Prometheus.export_dir,
+            ci_name=cfg.AccountInfo.ci_name,
+            logger=logger)
 
     for i in xrange(options.number_of_worker_threads):
         JobThread().start()
@@ -304,4 +306,5 @@ if __name__ == '__main__':
                     logger.debug("Total current queue length: %s\n",
                                  unicode(len(event_queue)))
 
-            exporter.export_queue_length(len(event_queue))
+            if exporter:
+                exporter.export_queue_length(len(event_queue))

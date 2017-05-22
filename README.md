@@ -99,4 +99,11 @@ A: Ansible uses SSH to connect to hosts, you need to make sure you have your sys
    you may have other methods you prefer, but for me I just have a config entry
    that specifies my keypair for any IP in the range of OpenStack cloud.
 
+Prometheus Integration
+----------------------
 
+This sos-ci fork provides a Prometheus metric export for collecting a sos-ci instances
+waiting queue length. In order to activate this add a section '[Prometheus]' to your
+configuration file and add the 'export_dir' property with the path to the node_exporter
+textfile collector directory to that section (see sos-ci.conf.sampel file). This creates
+a Prometheus metric based on the CIs name ("<ci-name>_queue_length").
