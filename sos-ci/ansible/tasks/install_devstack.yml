@@ -1,11 +1,16 @@
 - hosts: devstack_instances
   tasks:
 
+  - name: update & upgrade repo caches
+    sudo: yes
+    apt: update_cache=yes upgrade=safe
+
   - name: install pkgs
     sudo: yes
     apt: pkg={{ item }} state=present
     with_items:
       - git
+      - tmux
       - vim
 
   - name: Unload kvm_intel module
@@ -29,11 +34,23 @@
     lineinfile: dest=/home/ubuntu/devstack/local.conf regexp=^CINDER_BRANCH= line=CINDER_BRANCH={{ patchset_ref }}
     register: git_sha
 
+  - name: get host ip from instance
+    shell: "echo $(hostname -I|cut -d ' ' -f 1)"
+    register: host_ip_output
+
+  - set_fact:
+      instance_host_ip: "{{ host_ip_output.stdout }}"
+
+  - name: set host ip in local.conf
+    lineinfile: dest=/home/ubuntu/devstack/local.conf regexp=^HOST_IP_LINE line=HOST_IP={{instance_host_ip}}
+
   - name: run stack.sh
     sudo: no
-    shell: cd /home/ubuntu/devstack; ./stack.sh 2>&1 > /tmp/stack.sh.log.out
+    shell: tmux -c 'cd /home/ubuntu/devstack; ./stack.sh 2>&1 > /tmp/stack.sh.log.out'
     register: stack_result
     ignore_errors: true
+    async: 5400
+    poll: 180
 
   - name: Fetch stack.sh.log.out
     fetch: src=/tmp/stack.sh.log.out dest={{ results_dir }}/stack.sh.log.out flat=yes validate_md5=no
