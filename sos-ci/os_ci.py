@@ -138,17 +138,18 @@ class JobThread(Thread):
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
+            self.priv_key = paramiko.RSAKey.from_private_key_file(
+                cfg.AccountInfo.gerrit_ssh_key)
             self.ssh.connect(cfg.AccountInfo.gerrit_host,
                              int(cfg.AccountInfo.gerrit_port),
                              cfg.AccountInfo.ci_account,
-                             key_filename=cfg.AccountInfo.gerrit_ssh_key)
+                             pkey=self.priv_key)
+            logger.info('Issue vote: %s', cmd)
+            self.stdin, self.stdout, self.stderr = self.ssh.exec_command(cmd)
         except paramiko.SSHException as e:
             logger.error('%s', e)
-            sys.exit(1)
-
-        logger.info('Issue vote: %s', cmd)
-        self.stdin, self.stdout, self.stderr =\
-            self.ssh.exec_command(cmd)
+            # NOTE: Do not exit but continue on temporary connection issues.
+            #sys.exit(1)
 
     def run(self):
         counter = 0
