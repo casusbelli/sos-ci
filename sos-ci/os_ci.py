@@ -20,6 +20,8 @@ import prometheus
 fdir = os.path.dirname(os.path.realpath(__file__))
 conf_dir = os.path.dirname(fdir)
 cfg = INIConfig(open(conf_dir + '/sos-ci.conf'))
+PRIVATE_SSH_KEY = paramiko.RSAKey.from_private_key_file(
+    cfg.AccountInfo.gerrit_ssh_key)
 
 # Misc settings
 DATA_DIR =\
@@ -138,12 +140,10 @@ class JobThread(Thread):
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
-            self.priv_key = paramiko.RSAKey.from_private_key_file(
-                cfg.AccountInfo.gerrit_ssh_key)
             self.ssh.connect(cfg.AccountInfo.gerrit_host,
                              int(cfg.AccountInfo.gerrit_port),
                              cfg.AccountInfo.ci_account,
-                             pkey=self.priv_key)
+                             pkey=PRIVATE_SSH_KEY)
             logger.info('Issue vote: %s', cmd)
             self.stdin, self.stdout, self.stderr = self.ssh.exec_command(cmd)
         except paramiko.SSHException as e:
@@ -237,7 +237,7 @@ class GerritEventStream(object):
             self.ssh.connect(cfg.AccountInfo.gerrit_host,
                              int(cfg.AccountInfo.gerrit_port),
                              cfg.AccountInfo.ci_account,
-                             key_filename=cfg.AccountInfo.gerrit_ssh_key)
+                             pkey=PRIVATE_SSH_KEY)
         except paramiko.SSHException as e:
             logger.error('%s', e)
             sys.exit(1)
