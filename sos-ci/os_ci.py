@@ -53,7 +53,7 @@ def _is_my_ci_master(event):
     if (event.get('type', 'nill') == 'comment-added' and
             'Verified+1' in event['comment'] and
             cfg.AccountInfo.project_name == event['change']['project']):
-        if event['author']['username'] == 'jenkins':
+        if event['author']['username'] == 'zuul':
             if event['change']['branch'] != 'master':
                 logger.info('Not testing changes outside of master '
                             'yet (branch=%s).',
