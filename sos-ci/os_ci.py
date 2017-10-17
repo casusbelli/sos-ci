@@ -146,6 +146,7 @@ class JobThread(Thread):
                              pkey=PRIVATE_SSH_KEY)
             logger.info('Issue vote: %s', cmd)
             self.stdin, self.stdout, self.stderr = self.ssh.exec_command(cmd)
+            self.ssh.close()
         except paramiko.SSHException as e:
             logger.error('%s', e)
             # NOTE: Do not exit but continue on temporary connection issues.
